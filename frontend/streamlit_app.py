@@ -1,14 +1,22 @@
 # frontend/streamlit_app.py
 import re
+import os
 import streamlit as st
 import requests
-import os
+
+
+def get_secret(key: str, default: str = "") -> str:
+    try:
+        return st.secrets[key]
+    except (KeyError, FileNotFoundError):
+        return os.environ.get(key, default)
+
 
 st.title("도서 대출 관리 + 장르 예측")
 
-API_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
-API_KEY = "my-secret-key-12345"
-LIBRARIAN_KEY = "librarian-key-99999"
+API_URL = get_secret("BACKEND_URL", "http://localhost:8000")
+API_KEY = get_secret("API_KEY", "my-secret-key-12345")
+LIBRARIAN_KEY = get_secret("LIBRARIAN_KEY", "librarian-key-99999")
 
 headers = {"X-API-Key": API_KEY}
 librarian_headers = {"X-API-Key": LIBRARIAN_KEY}
@@ -130,7 +138,7 @@ with tab2:
                         r = requests.patch(
                             f"{API_URL}/books/{selected_book['id']}/borrow",
                             headers=headers,
-                            json={"borrower_name": borrower_name, "borrower_phonae": borrower_phone},
+                            json={"borrower_name": borrower_name, "borrower_phone": borrower_phone},
                         )
                         if r.status_code == 200:
                             result = r.json()

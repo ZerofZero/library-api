@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/library.db
+backend/.pytest_cache/
+backend/__pycache__/
+backend/routers/__pycache__/

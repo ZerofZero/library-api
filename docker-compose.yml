@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - API_KEYS=my-secret-key-12345,librarian-key-99999
+      - LIBRARIAN_KEYS=librarian-key-99999
+      - CORS_ORIGINS=http://localhost:8501
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
